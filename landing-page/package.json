@@ -1,0 +1,23 @@
+{
+  "name": "landing-page",
+  "version": "1.0.0",
+  "description": "Landing page pessoal",
+  "homepage": "https://github.com/xavierrjon/programacao-web#readme",
+  "bugs": {
+    "url": "https://github.com/xavierrjon/programacao-web/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xavierrjon/programacao-web.git"
+  },
+  "license": "ISC",
+  "author": "Johnny Xavier",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
