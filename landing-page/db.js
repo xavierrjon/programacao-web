@@ -8,17 +8,19 @@ const pool  = new Pool ({
     port: parseInt(process.env.PG_PORT || '5432', 10)
 
 });
-// Função para testar a conexão com o banco de dados
-async function testarConexao() {
-  try {
-    const client = await pool.connect();
-    console.log('Conexão com o banco de dados PostgreSQL estabelecida com sucesso!');
-    client.release(); // Libera o cliente de volta para o pool
-  } catch (error) {
-    console.error('Erro ao conectar ao banco de dados:', error.message);
-  }
-}
-// Executa o teste de conexão
-testarConexao();
 
-module.exports = pool;
+async function inicializarBanco() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS usuarios (
+      id SERIAL PRIMARY KEY,
+      avatar TEXT,
+      matricula TEXT NOT NULL UNIQUE,
+      nome TEXT NOT NULL,
+      curso TEXT NOT NULL,
+      data_cadastro TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  console.log('Conexão com o banco de dados PostgreSQL estabelecida com sucesso!');
+}
+
+module.exports = { pool, inicializarBanco };
