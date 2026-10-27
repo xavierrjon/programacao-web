@@ -81,3 +81,52 @@ document.getElementById("usuarioAvatar").addEventListener("change", (e) => {
   };
   preview.appendChild(img);
 });
+
+function exibirPreview(caminho, iniciais) {
+  const preview = document.getElementById("avatarPreview");
+  preview.innerHTML = "";
+  if (caminho) {
+    const img = document.createElement("img");
+    img.src = caminho;
+    img.onerror = () => {
+      exibirPreview(null, iniciais);
+    };
+    preview.appendChild(img);
+  } else {
+    const icone = document.createElement("i");
+    icone.className = "fas fa-user";
+    preview.appendChild(icone);
+  }
+}
+
+// atualização (renderização do frontend)
+
+function renderizarUsuario() {
+  const termo = (document.getElementById("pesquisaUsuario").value || "")
+    .trim()
+    .toLowerCase();
+  const tbody = document.getElementById("tabelaUsuariosBody");
+  const tabelaVazia = document.getElementById("tabelaUsuariosVazia");
+  tbody.innerHTML = "";
+
+  let lista = renderizarUsuarios.slice();
+  if (termo) {
+    lista = lista.filter(
+      (u) =>
+        u.nome.toLowerCase().includes(termo) ||
+        u.matricula.toLowerCase().includes(termo) ||
+        u.curso.toLowerCase().includes(termo),
+    );
+  }
+}
+if (lista.length === 0) {
+  tabelaVazia.style.display = "flex";
+  if (usuarios.length > 0 && termo) {
+    tabelaVazia.innerHTML =
+      "<i class='fas fa-search'></i> <p>Nenhum usuário encontrado para <strong>" +
+      termo +
+      "</strong></p>";
+  } else {
+    tabelaVazia.innerHTML = "<i class='fas fa-users-slash'></i> <p>Nenhum usuário cadastrado</p>";
+  }
+}
