@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/ece13eb306.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Cadastro de Usuários | Prof. Antônio Alberto</title>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-prof">Prof</span>
+                <span class="logo-name">Antônio Alberto</span>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Início</a>
+                <a href="index.html#sobre">Sobre</a>
+                <a href="index.html#comunidade">Comunidade</a>
+                <a href="index.html#contato">Contato</a>
+                <a href="http://lattes.cnpq.br/9036070270405711" target="_blank">Lattes</a>
+                <a href="usuarios.html" class="nav-login active-link" title="Cadastro de Usuários">
+                    <i class="fas fa-users"></i>
+                </a>
+            </nav>
+            <a href="index.html" class="btn-voltar" title="Voltar ao início"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </header>
+
+    <main class="area-professor-main">
+        <div class="container">
+
+            <div class="section-header">
+                <h1>Cadastro de Usuários</h1>
+                <div class="underline"></div>
+                <p class="section-subtitle">Cadastro, atualização e exclusão de usuários</p>
+            </div>
+
+            <!-- Formulário de Usuário -->
+            <div class="aluno-form-container" id="usuarioFormContainer">
+                <h3 id="formTitulo"><i class="fas fa-user-plus"></i> Cadastrar Usuário</h3>
+                <form id="usuarioForm" class="aluno-form">
+                    <input type="hidden" id="usuarioEditandoId">
+                    <input type="hidden" id="usuarioAvatarAtual">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="usuarioAvatar">Avatar (imagem)</label>
+                            <div class="avatar-upload">
+                                <div class="avatar-preview" id="avatarPreview">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="avatar-upload-controls">
+                                    <input type="file" id="usuarioAvatar" accept="image/*">
+                                    <small>JPG, PNG, GIF ou WEBP (até 5MB)</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="usuarioMatricula">Matrícula</label>
+                            <input type="text" id="usuarioMatricula" placeholder="Ex: 22051234" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="usuarioNome">Nome Completo</label>
+                            <input type="text" id="usuarioNome" placeholder="Nome completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="usuarioCurso">Curso</label>
+                            <select id="usuarioCurso" required>
+                                <option value="">Selecione o curso...</option>
+                                <option value="Engenharia de Software">Engenharia de Software</option>
+                                <option value="Ciência da Computação">Ciência da Computação</option>
+                                <option value="Sistemas de Informação">Sistemas de Informação</option>
+                                <option value="Engenharia da Computação">Engenharia da Computação</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-publicar" id="btnSalvarUsuario">
+                            <i class="fas fa-user-plus"></i> Cadastrar Usuário
+                        </button>
+                        <button type="button" class="btn-cancelar" id="btnCancelarEdicaoUsuario" style="display:none;" onclick="cancelarEdicaoUsuario()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tabela de Usuários -->
+            <div class="alunos-container">
+                <div class="alunos-header">
+                    <h3><i class="fas fa-users"></i> Usuários Cadastrados</h3>
+                    <div class="alunos-tools">
+                        <div class="pesquisa-input">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="pesquisaUsuario" placeholder="Pesquisar usuário..." oninput="renderizarUsuarios()">
+                        </div>
+                    </div>
+                </div>
+                <div class="tabela-container">
+                    <table class="tabela-alunos tabela-usuarios">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Avatar</th>
+                                <th>Matrícula</th>
+                                <th>Nome</th>
+                                <th>Curso</th>
+                                <th>Cadastro</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaUsuariosBody">
+                        </tbody>
+                    </table>
+                    <div class="tabela-vazia" id="tabelaUsuariosVazia">
+                        <i class="fas fa-users-slash"></i>
+                        <p>Nenhum usuário cadastrado. Cadastre o primeiro usuário acima.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section about">
+                <h2><i class="fas fa-graduation-cap"></i> Prof. Antônio Alberto</h2>
+                <p>Professor da Universidade Federal do Amazonas - UFAM/ICET.</p>
+            </div>
+            <div class="footer-section">
+                <h2>Links</h2>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="index.html#sobre">Sobre</a></li>
+                    <li><a href="index.html#contato">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h2>Instituição</h2>
+                <ul>
+                    <li><a href="https://www.ufam.edu.br" target="_blank">Portal UFAM</a></li>
+                    <li><a href="https://icet.ufam.edu.br" target="_blank">ICET/UFAM</a></li>
+                    <li><a href="http://lattes.cnpq.br/9036070270405711" target="_blank">Currículo Lattes</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Prof. Antônio Alberto - UFAM/ICET. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="usuarios.js"></script>
+</body>
+</html>

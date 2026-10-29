@@ -127,6 +127,112 @@ if (lista.length === 0) {
       termo +
       "</strong></p>";
   } else {
-    tabelaVazia.innerHTML = "<i class='fas fa-users-slash'></i> <p>Nenhum usuário cadastrado</p>";
+    tabelaVazia.innerHTML =
+      "<i class='fas fa-users-slash'></i> <p>Nenhum usuário cadastrado</p>";
   }
 }
+tabelaVazia.style.display = "none";
+
+lista.forEach((usuario, index) => {
+  const tr = document.createElement("tr");
+  tr.innerHTML =
+    "<td>" +
+    (index + 1) +
+    "</td>" +
+    "<td>" +
+    "<div class='avatar-cell'>" +
+    (usuario.avatar
+      ? "<img src='" +
+        usuario.avatar +
+        "' alt='Avatar' class='avatar-img' onerror = 'this.style.display = \"none\"; this.nextSibling.style.display = \"flex\";' />"
+      : "") +
+    '<div class="avatar-iniciais"' +
+    (usuario.avatar ? 'style="display: none;"' : "") +
+    ">" +
+    ">" +
+    obterIniciais(usuario.nome) +
+    "</div>" +
+    "</div>" +
+    "</td>" +
+    "<td>" +
+    usuario.matricula +
+    "</td>" +
+    "<td><strong>" +
+    usuario.nome +
+    "</strong></td>" +
+    "<td>" +
+    usuario.curso +
+    "</td>" +
+    "<td class='data-lancamento'>" +
+    (usuario.dataCadastro || "--") +
+    "</td>" +
+    "<td class='acao-btns'>" +
+    "<button class='btn-acao editar' onclick='editarUsuario(" +
+    usuario.id +
+    ")' title='Editar usuário'>" +
+    '<i class="fas fa-pen"></i>' +
+    "</button>" +
+    "<button class='btn-acao excluir' onclick='excluirUsuario(" +
+    usuario.id +
+    ")' title='Excluir usuário'>" +
+    '<i class="fas fa-trash"></i>' +
+    "</button>" +
+    "</td>";
+  tbody.appendChild(tr);
+});
+
+async function carregarUsuarios() {
+  try {
+    usuarios = await api.get("/usuarios");
+  } catch (err) {
+    alert(err.message);
+    usuarios = [];
+  }
+  renderizarUsuarios();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  carregarUsuarios();
+});
+
+// formulario cadastro (submit)
+
+document.getElementById("usuarioForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  // campos ID e ocultos
+  const editandoId = document.getElementById("usuarioEditandoId").value;
+  const matricula = document.getElementById("usuarioMatricula").value.trim();
+  const nome = document.getElementById("usuarioNome").value.trim();
+  const curso = document.getElementById("usuarioCurso").value.trim();
+
+  if (!matricula || !nome || !curso) {
+    alert("Por favor, preencha todos os campos.");
+    return;
+  }
+
+  try {
+    let avatar = document.getElementById("usuarioAvatarAtual").value || null;
+
+    if (arquivoAvatarSelecionado) {
+      const up = await api.uploadAvatar(arquivoAvatarSelecionado);
+      avatar = up.avatar;
+    }
+    if (editandoId) {
+      await api.put("/usuarios/" + editandoId, {
+        matricula,
+        nome,
+        curso,
+        avatar,
+      });
+    } else {
+      const duplicada = usuarios.some((u) => u.matricula === matricula);
+      if (duplicada) {
+        alert("Matrícula já cadastrada. Use outra matrícula.");
+        return;
+      }
+      await api.post("/usuarios", { matricula, nome, curso, avatar });
+    }
+    // limpar o form 
+  }
+
+})
